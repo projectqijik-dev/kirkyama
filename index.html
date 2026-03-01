@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kırkyama | Dijital Kaynak Merkeziniz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --accent-color: #6366f1;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            .logo { font-size: 2rem; }
+            .container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">KIRK<span>YAMA</span></div>
+        <p class="tagline">Parçalar birleşiyor, bilgi bütünleşiyor.</p>
+    </header>
+
+    <div class="container">
+        <main class="grid">
+            <a href="https://scholar.google.com.tr/" target="_blank" class="card">
+                <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Google Akademik</h3>
+                <p>Bilimsel makaleler, tezler ve akademik literatür için en geniş arama motoru.</p>
+            </a>
+
+            <a href="https://sozluk.gov.tr/" target="_blank" class="card">
+                <div class="icon"><i class="fas fa-book"></i></div>
+                <h3>TDK Sözlük</h3>
+                <p>Türkçeyi doğru kullanmak için resmi güncel sözlük ve yazım kılavuzu.</p>
+            </a>
+
+            <a href="https://unsplash.com/" target="_blank" class="card">
+                <div class="icon"><i class="fas fa-camera-retro"></i></div>
+                <h3>Unsplash</h3>
+                <p>Projelerinizde kullanabileceğiniz yüksek kaliteli, ücretsiz stok görseller.</p>
+            </a>
+
+            <a href="https://github.com/" target="_blank" class="card">
+                <div class="icon"><i class="fab fa-github"></i></div>
+                <h3>GitHub</h3>
+                <p>Kod dünyasının kalbi. Projelerinizi saklayın ve açık kaynak dünyasını keşfedin.</p>
+            </a>
+
+            <a href="https://www.worldhistory.org/" target="_blank" class="card">
+                <div class="icon"><i class="fas fa-landmark"></i></div>
+                <h3>World History</h3>
+                <p>Dünya tarihine dair kapsamlı, güvenilir ve etkileşimli bir ansiklopedi.</p>
+            </a>
+
+            <a href="https://www.notion.so/" target="_blank" class="card">
+                <div class="icon"><i class="fas fa-tasks"></i></div>
+                <h3>Notion</h3>
+                <p>Notlarınızı, projelerinizi ve hayatınızı organize etmek için hepsi bir arada çalışma alanı.</p>
+            </a>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Kırkyama Projesi. Hazırlayan: Murat Mutlu</p>
+    </footer>
+
+</body>
+</html>
