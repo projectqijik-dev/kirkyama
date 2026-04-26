@@ -1,348 +1,987 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kırkyama</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #f0ece4;
-    --black: #111;
-    --red: #d4200c;
-    --yellow: #f5c800;
-    --white: #fff;
-    --grey: #888;
-  }
-  body {
-    background: var(--bg);
-    font-family: 'Space Mono', monospace;
-    height: 100vh;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    position: relative;
-  }
-  /* Noise texture */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    opacity: 0.5;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Murat Mutlu — Dijital Çağda Tarih Öğretimi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       CSS VARIABLES
+    ============================================================ */
+    :root {
+      --parchment:     #ddd0b4;
+      --sage:          #afc0a8;
+      --grey-blue:     #96afc2;
+      --warm-tan:      #c8a87a;
+      --anthracite:    #16161a;
+      --gold:          #c4a040;
+      --gold-lt:       #e2c060;
+      --gold-glow:     rgba(196,160,64,0.22);
+      --ink:           #1c1810;
+      --ink-mid:       #3a3228;
+      --ink-lt:        #5a5040;
+      --wood-bg:       #111009;
 
-  header {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    padding: 1.2rem 2.5rem;
-    border-bottom: 3px solid var(--black);
-    position: relative;
-    z-index: 1;
-  }
-  .header-left {
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    color: var(--grey);
-    text-transform: uppercase;
-    line-height: 1.6;
-  }
-  .header-left strong { color: var(--black); display: block; }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    color: var(--black);
-    letter-spacing: 0.05em;
-    text-align: center;
-    line-height: 0.9;
-  }
-  h1 .accent { color: var(--red); }
-  .header-right {
-    text-align: right;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    color: var(--grey);
-  }
-  .issue-tag {
-    display: inline-block;
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Bebas Neue', serif;
-    font-size: 0.85rem;
-    padding: 0.15rem 0.6rem;
-    letter-spacing: 0.1em;
-  }
+      /* ── TAB GENİŞLİĞİ: mobilde küçük → masaüstünde büyük ── */
+      --tab-w:         clamp(30px, 6.5vw, 46px);
 
-  .main {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-left: 3px solid var(--black);
-    position: relative;
-    z-index: 1;
-  }
+      --ease-arch:     cubic-bezier(0.42, 0, 0.18, 1);
+      --dur:           0.52s;
+    }
 
-  .card {
-    border-right: 3px solid var(--black);
-    border-bottom: 3px solid var(--black);
-    padding: 1.5rem 1.4rem;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.15s;
-    background: var(--bg);
-  }
-  .card:nth-child(1) { border-top: 3px solid var(--black); }
-  .card:nth-child(2) { border-top: 3px solid var(--black); }
-  .card:nth-child(3) { border-top: 3px solid var(--black); }
-  .card:hover { background: var(--yellow); }
-  .card:hover .num { opacity: 1; }
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: var(--black);
-    opacity: 0.05;
-    position: absolute;
-    bottom: 0.5rem;
-    right: 1rem;
-    line-height: 1;
-    transition: opacity 0.15s;
-    pointer-events: none;
-  }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; }
-  .icon {
-    width: 46px;
-    height: 46px;
-    border: 2px solid var(--black);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--white);
-    flex-shrink: 0;
-  }
-  .tag {
-    font-size: 0.55rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--grey);
-    border: 1px solid currentColor;
-    padding: 0.15rem 0.4rem;
-  }
-  .card-body { margin-top: 1.2rem; }
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1rem, 2vw, 1.4rem);
-    color: var(--black);
-    line-height: 1.15;
-    margin-bottom: 0.4rem;
-  }
-  .card-rule { width: 30px; height: 2px; background: var(--red); }
-  .arrow {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.2em;
-    color: var(--black);
-    margin-top: 0.8rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .arrow::after { content: '→'; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(17,17,17,0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--white);
-    border: 3px solid var(--black);
-    padding: 0;
-    width: min(500px, 90vw);
-    transform: translate(4px, 4px);
-    box-shadow: -6px -6px 0 var(--black);
-    transition: transform 0.2s;
-  }
-  .modal-overlay.open .modal { transform: translate(0,0); }
-  .modal-header {
-    background: var(--black);
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .modal-header h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.1em;
-  }
-  .modal-close {
-    background: var(--red);
-    border: none;
-    color: var(--white);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 0.1em;
-    padding: 0.2rem 0.7rem;
-    cursor: pointer;
-  }
-  .modal-body { padding: 1.8rem 1.5rem; }
-  .modal-body p {
-    font-size: 0.85rem;
-    line-height: 1.8;
-    color: var(--black);
-  }
-  .modal-footer {
-    border-top: 2px solid var(--black);
-    padding: 0.7rem 1.5rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--grey);
-    text-transform: uppercase;
-  }
-</style>
+    body {
+      background-color: var(--wood-bg);
+      background-image:
+        repeating-linear-gradient(90deg,
+          transparent, transparent 46px,
+          rgba(255,255,255,0.015) 46px,
+          rgba(255,255,255,0.015) 47px),
+        repeating-linear-gradient(0deg,
+          transparent, transparent 46px,
+          rgba(255,255,255,0.015) 46px,
+          rgba(255,255,255,0.015) 47px);
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      user-select: none;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .archive-header {
+      flex: 0 0 7vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(10px, 3vw, 24px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7px, 1.6vw, 9px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .hdr-id  { color: var(--gold); opacity: 0.8; flex-shrink: 0; }
+    .hdr-sep { opacity: 0.25; flex: 1; text-align: center; }
+
+    /* ============================================================
+       ARCHIVE BOX
+    ============================================================ */
+    .archive-box {
+      flex: 0 0 86vh;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    /* ============================================================
+       FOLDER PANELS
+    ============================================================ */
+    .folder {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      /* Kapalıyken sadece sekme genişliği */
+      flex: 0 0 var(--tab-w);
+      min-width: var(--tab-w);
+      overflow: hidden;
+      cursor: pointer;
+      transition: flex var(--dur) var(--ease-arch);
+      border-right: 1px solid rgba(0,0,0,0.28);
+    }
+
+    .folder:last-child { border-right: none; }
+
+    /* Açık klasör — kalan tüm alanı al */
+    .folder.active {
+      flex: 1 1 0;
+      cursor: default;
+    }
+
+    /* Sağ kenar gölgesi */
+    .folder::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 10px; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(0,0,0,0.15));
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Kâğıt doku */
+    .folder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Renkler */
+    #proje_u1_vizyon_1    { background-color: var(--parchment); }
+    #proje_u2_ekosistem_1 { background-color: var(--sage); }
+    #proje_u3_teknoloji_1 { background-color: var(--grey-blue); }
+    #koleksiyon_u1_pul_1  { background-color: var(--warm-tan); }
+    #proje_u5_sinyal_1 {
+      background-color: var(--anthracite);
+      background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 28px,
+        rgba(196,160,64,0.03) 28px, rgba(196,160,64,0.03) 29px);
+    }
+    #proje_u5_sinyal_1::before { display: none; }
+
+    /* ============================================================
+       SEKME — DİKEY ŞERIT
+       Hem kapalı hem açık durumda ŞEKİL BOZULMADAN görünür.
+    ============================================================ */
+    .folder-tab {
+      position: relative;
+      z-index: 4;
+      /* Her zaman sabit genişlikte — flex-shrink:0 KRİTİK */
+      flex: 0 0 var(--tab-w);
+      min-width: var(--tab-w);
+      max-width: var(--tab-w);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 2vh, 20px);
+      padding: 24px 0;
+      background: inherit;
+      box-shadow: inset -1px 0 0 rgba(0,0,0,0.12), 1px 0 0 rgba(255,255,255,0.05);
+    }
+
+    /* Sekme kodu — çok küçük, üstte */
+    .tab-code {
+      writing-mode: vertical-lr;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(6px, 1.1vw, 7.5px);
+      letter-spacing: 0.15em;
+      opacity: 0.38;
+      color: var(--ink);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Sekme başlığı — her zaman tam, net, okunabilir */
+    .tab-title {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      /* Sekme genişliğiyle orantılı boyut */
+      font-size: clamp(9px, 1.8vw, 12px);
+      letter-spacing: clamp(0.14em, 0.3vw, 0.22em);
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      /* ASLA ezilmemesi için: */
+      white-space: nowrap;
+      overflow: visible;
+      /* Sığmıyorsa küçül ama okunsun */
+      line-height: 1;
+      transition: color 0.25s, opacity 0.25s;
+    }
+
+    #proje_u5_sinyal_1 .tab-title { color: var(--gold); }
+    #proje_u5_sinyal_1 .tab-code  { color: var(--gold); opacity: 0.55; }
+
+    .folder:not(.active):hover .tab-title { color: var(--ink); }
+    #proje_u5_sinyal_1:not(.active):hover .tab-title { color: var(--gold-lt); }
+
+    .tab-index {
+      writing-mode: vertical-lr;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7px, 1.2vw, 9px);
+      opacity: 0.28;
+      color: var(--ink);
+    }
+
+    #proje_u5_sinyal_1 .tab-index { color: var(--gold-lt); opacity: 0.4; }
+
+    /* ============================================================
+       İÇERİK PANELİ
+       — Gizli → açık animasyonu; padding ve font boyutları
+         aktif panel genişliğine göre clamp ile ölçeklenir
+    ============================================================ */
+    .folder-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      /* Responsive padding */
+      padding: clamp(16px, 3vh, 30px) clamp(14px, 3vw, 26px) clamp(14px, 2.5vh, 24px) clamp(12px, 2vw, 18px);
+      opacity: 0;
+      transform: translateX(-8px);
+      pointer-events: none;
+      transition:
+        opacity  0.2s ease 0s,
+        transform 0.2s ease 0s;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.18) transparent;
+      /* Kelimelerin kırılmasına izin ver */
+      word-break: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+
+    .folder.active .folder-content {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      transition:
+        opacity  0.35s ease 0.28s,
+        transform 0.32s ease 0.26s;
+    }
+
+    /* ============================================================
+       İÇERİK — ORTAK ELEMANLAR
+       Font boyutları viewport yerine içerik alanını referans alır.
+       clamp: en az / ideal / en fazla
+    ============================================================ */
+
+    /* Dosya kodu */
+    .file-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(8px, 1.8vw, 10px);
+      letter-spacing: 0.18em;
+      opacity: 0.45;
+      text-transform: uppercase;
+      margin-bottom: clamp(14px, 2.5vh, 22px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .file-id::after {
+      content: '';
+      display: block;
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.22;
+    }
+
+    /* Ana başlık */
+    .f-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      /* Bu clamp aktif panel genişliğini dolaylı hedefler */
+      font-size: clamp(15px, 4.5vw, 24px);
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: clamp(10px, 1.8vh, 16px);
+      letter-spacing: 0.03em;
+    }
+
+    #proje_u5_sinyal_1 .f-title {
+      color: var(--gold-lt);
+      text-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    /* Açıklama metni */
+    .f-sub {
+      font-size: clamp(12px, 2.8vw, 14px);
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--ink-lt);
+      margin-bottom: clamp(14px, 2.2vh, 20px);
+    }
+
+    #proje_u5_sinyal_1 .f-sub { color: rgba(255,255,255,0.4); }
+
+    /* Bölücü çizgi */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 85%);
+      margin: clamp(12px, 2vh, 18px) 0;
+    }
+    #proje_u5_sinyal_1 .divider {
+      background: linear-gradient(90deg, rgba(196,160,64,0.4) 0%, transparent 85%);
+    }
+
+    /* ============================================================
+       SYS LOG BLOĞU
+    ============================================================ */
+    .sys-log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(9px, 2vw, 11px);
+      line-height: 1.9;
+      color: var(--ink-mid);
+      background: rgba(0,0,0,0.08);
+      border-left: 2px solid rgba(0,0,0,0.18);
+      padding: clamp(10px, 1.8vh, 14px) clamp(10px, 2vw, 14px);
+      border-radius: 0 2px 2px 0;
+      letter-spacing: 0.04em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .l-ts   { opacity: 0.38; }
+    .l-ok   { color: #3a6a40; font-weight: 500; }
+    .l-warn { color: #7a5800; font-weight: 500; }
+    .l-act  { color: #4a5e8a; }
+
+    /* ============================================================
+       TEKNOLOJİ ETİKETLERİ
+    ============================================================ */
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: clamp(12px, 2vh, 18px);
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(8px, 1.8vw, 10px);
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 2px;
+      color: var(--ink-lt);
+      background: rgba(0,0,0,0.07);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       KOD BLOĞU
+    ============================================================ */
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(9px, 1.9vw, 11px);
+      line-height: 1.8;
+      background: rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: clamp(10px, 1.8vh, 14px) clamp(10px, 2vw, 13px);
+      border-radius: 2px;
+      color: var(--ink-mid);
+      margin-bottom: clamp(10px, 1.5vh, 14px);
+      /* Kırılmaya izin ver, yatay scroll yok */
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-x: hidden;
+    }
+
+    .kw  { color: #5a3e8c; }
+    .str { color: #3a6e3e; }
+    .cm  { opacity: 0.4; font-style: italic; }
+    .fn  { color: #2a5e88; }
+
+    /* ============================================================
+       PORTAL LİNKLERİ
+    ============================================================ */
+    .portal-links {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: clamp(12px, 2vh, 16px);
+    }
+
+    .p-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: clamp(8px, 1.5vh, 10px) clamp(9px, 1.8vw, 12px);
+      border: 1px solid rgba(0,0,0,0.13);
+      border-radius: 2px;
+      background: rgba(0,0,0,0.05);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.16s, border-color 0.16s, transform 0.16s;
+    }
+
+    .p-link:hover {
+      background: rgba(0,0,0,0.12);
+      border-color: rgba(0,0,0,0.26);
+      transform: translateX(2px);
+    }
+
+    .p-link-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(8px, 1.6vw, 9.5px);
+      letter-spacing: 0.1em;
+      opacity: 0.45;
+      flex-shrink: 0;
+      color: var(--ink);
+    }
+
+    .p-link-name {
+      font-size: clamp(11px, 2.4vw, 13px);
+      font-weight: 400;
+      color: var(--ink-mid);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .p-link-arrow {
+      opacity: 0.3;
+      flex-shrink: 0;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .p-link:hover .p-link-arrow { opacity: 0.65; transform: translateX(2px); }
+
+    /* ============================================================
+       KOLEKSİYON GİRİŞLERİ
+    ============================================================ */
+    .c-entry {
+      margin-bottom: clamp(14px, 2.2vh, 18px);
+      padding-bottom: clamp(14px, 2.2vh, 18px);
+      border-bottom: 1px dashed rgba(0,0,0,0.14);
+    }
+    .c-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .c-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(8px, 1.6vw, 9px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .c-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(11px, 2.8vw, 13.5px);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .c-text {
+      font-size: clamp(11.5px, 2.5vw, 13px);
+      font-weight: 400;
+      line-height: 1.68;
+      color: var(--ink-lt);
+    }
+
+    /* ============================================================
+       SİNYAL / UYARI KUTUSU (Klasör 5)
+    ============================================================ */
+    .signal-alert {
+      position: relative;
+      border: 1px solid rgba(196,160,64,0.30);
+      padding: clamp(14px, 2.5vh, 20px) clamp(14px, 2.5vw, 18px) clamp(16px, 2.8vh, 22px);
+      margin-bottom: clamp(14px, 2.2vh, 18px);
+      overflow: hidden;
+    }
+
+    .signal-alert::before {
+      content: '▲  KRİTİK  //  ALERT';
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7px, 1.5vw, 8px);
+      letter-spacing: 0.20em;
+      color: var(--gold);
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+
+    /* Altın tarama çizgisi */
+    .signal-alert::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(196,160,64,0.07), transparent);
+      animation: sweep 4.5s linear infinite;
+    }
+
+    @keyframes sweep { 0% { left: -55%; } 100% { left: 115%; } }
+
+    .sig-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(13px, 3.8vw, 20px);
+      font-weight: 700;
+      color: var(--gold-lt);
+      line-height: 1.3;
+      letter-spacing: 0.05em;
+    }
+
+    .sig-pulse {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-right: 8px;
+      vertical-align: middle;
+      animation: gpulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes gpulse {
+      0%, 100% { opacity: 1;   box-shadow: 0 0 0   0   var(--gold-glow); }
+      50%       { opacity: 0.4; box-shadow: 0 0 10px 4px var(--gold-glow); }
+    }
+
+    .sig-body {
+      font-size: clamp(11.5px, 2.5vw, 13px);
+      font-weight: 400;
+      line-height: 1.72;
+      color: rgba(255,255,255,0.42);
+      margin-top: clamp(10px, 1.8vh, 14px);
+    }
+
+    .sig-stats {
+      display: flex;
+      gap: clamp(14px, 4vw, 28px);
+      margin-top: clamp(14px, 2.5vh, 20px);
+      flex-wrap: wrap;
+    }
+
+    .s-item { display: flex; flex-direction: column; gap: 3px; }
+
+    .s-val {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(20px, 5.5vw, 28px);
+      font-weight: 700;
+      color: var(--gold-lt);
+      line-height: 1;
+    }
+
+    .s-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7px, 1.5vw, 8.5px);
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+
+    .sig-footer {
+      margin-top: clamp(14px, 2.5vh, 20px);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7.5px, 1.6vw, 9px);
+      color: rgba(196,160,64,0.36);
+      letter-spacing: 0.14em;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .archive-footer {
+      flex: 0 0 7vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(10px, 3vw, 24px);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(7px, 1.5vw, 8.5px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      white-space: nowrap;
+      overflow: hidden;
+      gap: 8px;
+    }
+
+    .ftr-live { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+
+    .ftr-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #849e7c;
+      animation: gpulse 3s ease-in-out infinite;
+    }
+
+    #footer-folder-label { color: var(--gold); opacity: 0.7; flex-shrink: 0; }
+    .ftr-copy { overflow: hidden; text-overflow: ellipsis; opacity: 0.5; }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <strong></strong>
-    
-  </div>
-  <h1>Murat<br><span class="accent">Mutlu</span></h1>
-  <div class="header-right">
-    <div class="issue-tag">Tarih Öğretmeni</div><br>
-    <span></span>
-  </div>
-</header>
+  <!-- HEADER -->
+  <header class="archive-header">
+    <span class="hdr-id">SYS_ID: MURAT_ARCH_2025_001</span>
+    <span class="hdr-sep">// EĞİTİM TEKNOLOJİLERİ ATÖLYE //</span>
+    <span id="live-ts">00:00:00</span>
+  </header>
 
-<div class="main">
-  <a href="https://tarih.kirkyama.uk/" class="card">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <span class="tag">Portal</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Tarih Portalı</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Git</span>
-    </div>
-    <div class="num">01</div>
-  </a>
+  <!-- ARŞİV KUTUSU -->
+  <main class="archive-box" id="archive-box">
 
-  <a href="https://tarih.kirkyama.uk/sosyal_medya.html" class="card">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      </div>
-      <span class="tag">Dijital</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Algoritmik Mimari</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Git</span>
-    </div>
-    <div class="num">02</div>
-  </a>
+    <!-- ═══════════════════════════════════════════════
+         KLASÖR 1 — ARŞİV LOG / VİZYON
+         ID: proje_u1_vizyon_1
+    ═══════════════════════════════════════════════ -->
+    <div class="folder active" id="proje_u1_vizyon_1">
 
-  <a href="https://notaldiklarimdir.blogspot.com/" class="card">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div class="folder-tab">
+        <span class="tab-code">CODE_001 //</span>
+        <span class="tab-title">ARŞİV_LOG</span>
+        <span class="tab-index">01</span>
       </div>
-      <span class="tag">Arşiv</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Not Aldıklarım</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Git</span>
-    </div>
-    <div class="num">03</div>
-  </a>
 
-  <a href="https://kartvepul.blogspot.com/" class="card">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8"/></svg>
-      </div>
-      <span class="tag">Koleksiyon</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Kart ve Pul</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Git</span>
-    </div>
-    <div class="num">04</div>
-  </a>
+      <div class="folder-content">
 
-  <a href="https://vimeo.com/belokan" class="card">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-      </div>
-      <span class="tag">Video</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Vimeo</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Git</span>
-    </div>
-    <div class="num">05</div>
-  </a>
+        <div class="file-id">DOSYA_01 // VİZYON</div>
 
-  <div class="card" onclick="openModal()" style="cursor:pointer;">
-    <div class="card-top">
-      <div class="icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <h1 class="f-title">DİJİTAL ÇAĞDA<br>TARİH YAZIMI</h1>
+
+        <p class="f-sub">
+          Geçmişin bilgisini modern web mimarisiyle yapılandıran
+          eğitim teknolojileri atölyesi. Sınıf duvarlarını aşan,
+          arşiv kadar kalıcı — portal kadar erişilebilir.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="sys-log">
+<span class="l-ts">[00:00:01]</span>  SYS_LOG: INIT_SUCCESS
+<span class="l-ts">[00:00:02]</span>  ENV: <span class="l-ok">PRODUCTION</span>
+<span class="l-ts">[00:00:03]</span>  CANVAS_ENGINE: <span class="l-ok">LOADED</span>
+<span class="l-ts">[00:00:04]</span>  THEME: <span class="l-act">OTTOMAN_V2 ACTIVE</span>
+<span class="l-ts">[00:00:05]</span>  FONTS: CINZEL+MONO <span class="l-ok">OK</span>
+<span class="l-ts">[00:00:06]</span>  PORTAL_09: <span class="l-warn">STANDBY</span>
+<span class="l-ts">[00:00:07]</span>  PORTAL_10: <span class="l-warn">STANDBY</span>
+<span class="l-ts">[00:00:09]</span>  STATUS: <span class="l-ok">ARCHIVE_OPERATIONAL</span></div>
+
+        <div class="divider"></div>
+
+        <p style="font-family:'JetBrains Mono',monospace;
+                  font-size:clamp(8px,1.8vw,9.5px);
+                  letter-spacing:0.09em;opacity:0.35;line-height:1.9;">
+          SINIF 9 • 10 • 11<br>
+          MEB / TYMM UYUMLU<br>
+          ÖZEL BATMAN BOĞAZİÇİ KOLEJİ MTAL
+        </p>
+
       </div>
-      <span class="tag" style="border-color:#d4200c;color:#d4200c;">Kimim?</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Hakkımda</div>
-      <div class="card-rule"></div>
-      <span class="arrow">Aç</span>
-    </div>
-    <div class="num">06</div>
-  </div>
+    </div><!-- /proje_u1_vizyon_1 -->
+
+
+    <!-- ═══════════════════════════════════════════════
+         KLASÖR 2 — DİJİTAL EKOSİSTEM
+         ID: proje_u2_ekosistem_1
+    ═══════════════════════════════════════════════ -->
+    <div class="folder" id="proje_u2_ekosistem_1">
+
+      <div class="folder-tab">
+        <span class="tab-code">CODE_002 //</span>
+        <span class="tab-title">EKOSİSTEM</span>
+        <span class="tab-index">02</span>
+      </div>
+
+      <div class="folder-content">
+
+        <div class="file-id">DOSYA_02 // DİJİTAL_ARŞİV</div>
+
+        <h2 class="f-title">Dijital Arşiv<br>& Portal Ağı</h2>
+
+        <p class="f-sub">
+          Batman yerel belleğini dijitale aktaran Dijital Tarih Müzesi.
+          Sözlü tarih, fotoğraf arşivi ve harita katmanlarıyla
+          bölge hafızasını koruyan interaktif ekosistem.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="portal-links">
+          <a class="p-link" href="https://tarih.kirkyama.uk/sinif9.html">
+            <span class="p-link-id">PORTAL_09</span>
+            <span class="p-link-name">9. Sınıf — Antik &amp; Orta Çağ Uygarlıkları</span>
+            <span class="p-link-arrow">→</span>
+          </a>
+          <a class="p-link" href="https://tarih.kirkyama.uk/sinif10.html">
+            <span class="p-link-id">PORTAL_10</span>
+            <span class="p-link-name">10. Sınıf — Türk-İslam &amp; Osmanlı Kuruluş // Yükseliş</span>
+            <span class="p-link-arrow">→</span>
+          </a>
+          <a class="p-link" href="https://tarih.kirkyama.uk/sinif11.html">
+            <span class="p-link-id">PORTAL_11</span>
+            <span class="p-link-name">11. Sınıf — Devrimler Çağı</span>
+            <span class="p-link-arrow">→</span>
+          </a>
+          <a class="p-link" href="#">
+            <span class="p-link-id">BATMAN_MZ</span>
+            <span class="p-link-name">Dijital Tarih Müzesi</span>
+            <span class="p-link-arrow">→</span>
+          </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <p style="font-size:clamp(11px,2.4vw,13px);line-height:1.72;opacity:0.52;">
+          Bağlam-temelli sınav motoru, interaktif harita katmanları
+          ve dönem simülasyonlarıyla donatılmış sıfır-bağımlılık
+          eğitim platformu.
+        </p>
+
+      </div>
+    </div><!-- /proje_u2_ekosistem_1 -->
+
+
+    <!-- ═══════════════════════════════════════════════
+         KLASÖR 3 — GELİŞTİRİCİ KİMLİĞİ / TEKNOLOJİ
+         ID: proje_u3_teknoloji_1
+    ═══════════════════════════════════════════════ -->
+    <div class="folder" id="proje_u3_teknoloji_1">
+
+      <div class="folder-tab">
+        <span class="tab-code">CODE_003 //</span>
+        <span class="tab-title">TEKNOLOJİ</span>
+        <span class="tab-index">03</span>
+      </div>
+
+      <div class="folder-content">
+
+        <div class="file-id">DOSYA_03 // STACK</div>
+
+        <h2 class="f-title">Geliştirici<br>Kimliği</h2>
+
+        <div class="tech-tags">
+          <span class="tag">Vanilla JS</span>
+          <span class="tag">Canvas API</span>
+          <span class="tag">Cloudflare R2</span>
+          <span class="tag">CSS clamp()</span>
+          <span class="tag">MEB/TYMM</span>
+          <span class="tag">Dağıtık Mimari</span>
+          <span class="tag">Web Audio API</span>
+          <span class="tag">Zero-Dependency</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="code-block"><span class="cm">// motor_sinif10.js</span>
+<span class="kw">class</span> <span class="fn">StrokeEngine</span> {
+  <span class="kw">constructor</span>(canvas) {
+    <span class="kw">this</span>.speed = <span class="str">0.0015</span>;
+    <span class="kw">this</span>.theme = <span class="str">'ottoman-v2'</span>;
+    <span class="kw">this</span>.r2    = <span class="str">'history-assets'</span>;
+  }
+  <span class="fn">init</span>() { <span class="cm">/* bezier curve */</span> }
+}
+<span class="cm">// WcBlob: watercolour engine</span>
+<span class="cm">// α ≤ 0.18, slow grow speed</span></div>
+
+        <p style="font-family:'JetBrains Mono',monospace;
+                  font-size:clamp(8.5px,1.9vw,10.5px);
+                  line-height:1.85;opacity:0.42;letter-spacing:0.05em;">
+          NOTE // Müzik çalar: Web Audio API<br>
+          R2 bucket: history-portal-assets<br>
+          CDN: Cloudflare Workers dağıtımı
+        </p>
+
+      </div>
+    </div><!-- /proje_u3_teknoloji_1 -->
+
+
+    <!-- ═══════════════════════════════════════════════
+         KLASÖR 4 — KOLEKSİYON / ATÖLYE
+         ID: koleksiyon_u1_pul_1
+    ═══════════════════════════════════════════════ -->
+    <div class="folder" id="koleksiyon_u1_pul_1">
+
+      <div class="folder-tab">
+        <span class="tab-code">CODE_004 //</span>
+        <span class="tab-title">KOLEKSİYON</span>
+        <span class="tab-index">04</span>
+      </div>
+
+      <div class="folder-content">
+
+        <div class="file-id">DOSYA_04 // KİŞİSEL</div>
+
+        <h2 class="f-title">Atölye &<br>Koleksiyonlar</h2>
+
+        <div class="divider"></div>
+
+        <div class="c-entry">
+          <div class="c-label">ARŞİV_A // FİLATELİ</div>
+          <div class="c-title">Posta Tarihi Araştırmaları</div>
+          <div class="c-text">
+            Kişisel pul koleksiyonu ve filateli araştırmaları.
+            Kartpostal koleksiyonu.
+          </div>
+        </div>
+		
+		<div class="c-entry">
+          <div class="c-label">ARŞİV_B // FOTOĞRAFÇILIK</div>
+          <div class="c-title">Profesyonel ve Mobil Fotoğrafçılık</div>
+          <div class="c-text">
+            Dünya'ya vizor arkasından bakmanın ve zamanı dondurma telaşı.
+          </div>
+        </div>
+
+        <div class="c-entry">
+          <div class="c-label">ARŞİV_C // DOLMAKALEM</div>
+          <div class="c-title">Platinum #3776 — Uç &amp; Mürekkep Günlüğü</div>
+          <div class="c-text">
+            Platinum Century serisi nib notları, Iroshizuku mürekkep
+            karşılaştırmaları. Arşiv belgeleri için optimal
+            akış-kâğıt uyumu denemeleri.
+          </div>
+        </div>
+
+        <div class="c-entry">
+          <div class="c-label">ARŞİV_D // SERA</div>
+          <div class="c-title">Kasımpatı Çelikleme &amp; Sera Protokolü</div>
+          <div class="c-text">
+            <em>Chrysanthemum</em> spp. çelik alma notları, hormon
+            konsantrasyon denemeleri. Kapalı sera mikro-iklim
+            kayıtları ve fenolojik gelişim takvimi.
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /koleksiyon_u1_pul_1 -->
+
+
+    <!-- ═══════════════════════════════════════════════
+         KLASÖR 5 — SİNYAL / VURGU
+         ID: proje_u5_sinyal_1
+    ═══════════════════════════════════════════════ -->
+    <div class="folder" id="proje_u5_sinyal_1">
+
+      <div class="folder-tab">
+        <span class="tab-code">CODE_005 //</span>
+        <span class="tab-title">SİNYAL</span>
+        <span class="tab-index">05</span>
+      </div>
+
+      <div class="folder-content">
+
+        <div class="file-id" style="color:rgba(196,160,64,0.52);">
+          DOSYA_05 // KRİTİK_BÖLGE
+        </div>
+
+        <div class="signal-alert">
+          <div class="sig-title">
+            <span class="sig-pulse"></span>Tarihsel Hafızanın<br>Dijital İnşası
+          </div>
+        </div>
+
+        <p class="f-sub">
+          Dijital çağda tarihsel hafıza nasıl inşa ediliyor?
+          Algoritmik arşivleme, kayıp belge riski ve eğitimde
+          kaynak eleştirisinin yeni boyutları.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="sig-stats">
+          <div class="s-item">
+            <span class="s-val">2</span>
+            <span class="s-lbl">Aktif Sınıf</span>
+          </div>
+          <div class="s-item">
+            <span class="s-val">30+</span>
+            <span class="s-lbl">Klasik Sınav Seti</span>
+          </div>
+		  <div class="s-item">
+            <span class="s-val">40+</span>
+            <span class="s-lbl">Test Seti</span>
+          </div>
+          <div class="s-item">
+            <span class="s-val">∞</span>
+            <span class="s-lbl">Arşiv Hafızası</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="sig-body">
+    TYMM / 
+    <a href="https://tymm.meb.gov.tr/beceriler/kavramsal-beceriler" 
+       target="_blank" 
+       style="color: #DAA520; text-decoration: none; font-weight: bold;">
+       KB3.3
+    </a> 
+    eleştirel düşünme çıktısı: dijital kaynakların güvenilirlik hiyerarşisi, 
+    birincil kaynak önceliği ve algoritmik önyargı farkındalığı.<br><br>
+    <a href="https://tymm.meb.gov.tr/beceriler/sosyal-bilimler-alan-becerileri" 
+       target="_blank" 
+       style="color: #DAA520; text-decoration: none; font-weight: bold;">
+       SBAB4.2
+    </a> 
+    — Değişim ve Süreklilik ekseninde.
 </div>
 
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Hakkımda</h2>
-      <button class="modal-close" onclick="closeModal()">KAPAT ✕</button>
-    </div>
-    <div class="modal-body">
-      <p>öğretmen. eskiçağ tarihçisi. editör eskisi. pul toplayıp fotoğraf ve heykellere bakıyorum.<br><br>İletişim için: murat@kirkyama.uk</p>
-    </div>
-    <div class="modal-footer">À l'aurore, armès d’une ardente patience, nous entrerons aux splendides villes
-</div>
-  </div>
-</div>
+        <div class="sig-footer">
+          SIG_STATUS: TRANSMITTING //<br>
+          END_OF_ARCHIVE //
+        </div>
 
-<script>
-  function openModal() { document.getElementById('modal').classList.add('open'); }
-  function closeModal() { document.getElementById('modal').classList.remove('open'); }
-  document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-</script>
+      </div>
+    </div><!-- /proje_u5_sinyal_1 -->
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="archive-footer">
+    <div class="ftr-live">
+      <div class="ftr-dot"></div>
+      <span>AKTİF</span>
+    </div>
+    <span class="ftr-copy">© 2025 Murat Mutlu — Türkiye</span>
+    <span id="footer-folder-label">FOLDER: ARŞİV_LOG</span>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════
+       MİNİMAL VANILLA JS — Sıfır harici bağımlılık
+  ══════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      'use strict';
+
+      const folders     = document.querySelectorAll('.folder');
+      const footerLabel = document.getElementById('footer-folder-label');
+
+      /* Klasör tıklama */
+      folders.forEach(folder => {
+        folder.addEventListener('click', function () {
+          if (this.classList.contains('active')) return;
+          folders.forEach(f => f.classList.remove('active'));
+          this.classList.add('active');
+          const label = this.querySelector('.tab-title').textContent.trim();
+          footerLabel.textContent = 'FOLDER: ' + label;
+        });
+      });
+
+      /* Canlı saat */
+      const tsEl = document.getElementById('live-ts');
+      function tick() {
+        const d = new Date();
+        const p = n => String(n).padStart(2, '0');
+        tsEl.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      /* Klavye navigasyonu ← → */
+      document.addEventListener('keydown', function (e) {
+        const all = Array.from(folders);
+        const idx = all.findIndex(f => f.classList.contains('active'));
+        let next = -1;
+        if (e.key === 'ArrowRight') next = Math.min(idx + 1, all.length - 1);
+        if (e.key === 'ArrowLeft')  next = Math.max(idx - 1, 0);
+        if (next !== -1 && next !== idx) all[next].click();
+      });
+
+    })();
+  </script>
+
 </body>
 </html>
