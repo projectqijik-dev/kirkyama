@@ -37,7 +37,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      width: 100%; height: 100%;
+      width: 100%; 
+      height: 100%;
+      height: 100dvh; /* Mobil tarayıcı çubukları için dinamik yükseklik */
       overflow: hidden;
     }
 
@@ -63,7 +65,8 @@
        HEADER
     ============================================================ */
     .archive-header {
-      flex: 0 0 7vh;
+      flex: 0 0 auto; /* Sabit yükseklik, esnemez */
+      height: 7vh;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -85,7 +88,7 @@
        ARCHIVE BOX
     ============================================================ */
     .archive-box {
-      flex: 0 0 86vh;
+      flex: 1; /* Kalan tüm alanı kapla, header ve footer'ı sıkıştırma */
       display: flex;
       flex-direction: row;
       overflow: hidden;
@@ -150,12 +153,10 @@
 
     /* ============================================================
        SEKME — DİKEY ŞERIT
-       Hem kapalı hem açık durumda ŞEKİL BOZULMADAN görünür.
     ============================================================ */
     .folder-tab {
       position: relative;
       z-index: 4;
-      /* Her zaman sabit genişlikte — flex-shrink:0 KRİTİK */
       flex: 0 0 var(--tab-w);
       min-width: var(--tab-w);
       max-width: var(--tab-w);
@@ -170,7 +171,6 @@
       box-shadow: inset -1px 0 0 rgba(0,0,0,0.12), 1px 0 0 rgba(255,255,255,0.05);
     }
 
-    /* Sekme kodu — çok küçük, üstte */
     .tab-code {
       writing-mode: vertical-lr;
       font-family: 'JetBrains Mono', monospace;
@@ -182,21 +182,17 @@
       white-space: nowrap;
     }
 
-    /* Sekme başlığı — her zaman tam, net, okunabilir */
     .tab-title {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      /* Sekme genişliğiyle orantılı boyut */
       font-size: clamp(9px, 1.8vw, 12px);
       letter-spacing: clamp(0.14em, 0.3vw, 0.22em);
       text-transform: uppercase;
       color: var(--ink-mid);
-      /* ASLA ezilmemesi için: */
       white-space: nowrap;
       overflow: visible;
-      /* Sığmıyorsa küçül ama okunsun */
       line-height: 1;
       transition: color 0.25s, opacity 0.25s;
     }
@@ -219,8 +215,6 @@
 
     /* ============================================================
        İÇERİK PANELİ
-       — Gizli → açık animasyonu; padding ve font boyutları
-         aktif panel genişliğine göre clamp ile ölçeklenir
     ============================================================ */
     .folder-content {
       position: relative;
@@ -229,7 +223,6 @@
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      /* Responsive padding */
       padding: clamp(16px, 3vh, 30px) clamp(14px, 3vw, 26px) clamp(14px, 2.5vh, 24px) clamp(12px, 2vw, 18px);
       opacity: 0;
       transform: translateX(-8px);
@@ -239,7 +232,6 @@
         transform 0.2s ease 0s;
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,0.18) transparent;
-      /* Kelimelerin kırılmasına izin ver */
       word-break: break-word;
       overflow-wrap: break-word;
       hyphens: auto;
@@ -256,11 +248,8 @@
 
     /* ============================================================
        İÇERİK — ORTAK ELEMANLAR
-       Font boyutları viewport yerine içerik alanını referans alır.
-       clamp: en az / ideal / en fazla
     ============================================================ */
 
-    /* Dosya kodu */
     .file-id {
       font-family: 'JetBrains Mono', monospace;
       font-size: clamp(8px, 1.8vw, 10px);
@@ -281,11 +270,9 @@
       opacity: 0.22;
     }
 
-    /* Ana başlık */
     .f-title {
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      /* Bu clamp aktif panel genişliğini dolaylı hedefler */
       font-size: clamp(15px, 4.5vw, 24px);
       line-height: 1.25;
       color: var(--ink);
@@ -298,7 +285,6 @@
       text-shadow: 0 0 40px var(--gold-glow);
     }
 
-    /* Açıklama metni */
     .f-sub {
       font-size: clamp(12px, 2.8vw, 14px);
       font-weight: 400;
@@ -309,7 +295,6 @@
 
     #proje_u5_sinyal_1 .f-sub { color: rgba(255,255,255,0.4); }
 
-    /* Bölücü çizgi */
     .divider {
       height: 1px;
       background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 85%);
@@ -377,7 +362,6 @@
       border-radius: 2px;
       color: var(--ink-mid);
       margin-bottom: clamp(10px, 1.5vh, 14px);
-      /* Kırılmaya izin ver, yatay scroll yok */
       white-space: pre-wrap;
       word-break: break-all;
       overflow-x: hidden;
@@ -478,7 +462,7 @@
     }
 
     /* ============================================================
-       SİNYAL / UYARI KUTUSU (Klasör 5)
+       SİNYAL / UYARI KUTUSU
     ============================================================ */
     .signal-alert {
       position: relative;
@@ -499,7 +483,6 @@
       opacity: 0.7;
     }
 
-    /* Altın tarama çizgisi */
     .signal-alert::after {
       content: '';
       position: absolute;
@@ -580,7 +563,8 @@
        FOOTER
     ============================================================ */
     .archive-footer {
-      flex: 0 0 7vh;
+      flex: 0 0 auto; /* Sabit yükseklik, esnemez */
+      height: 7vh;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -611,42 +595,29 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="archive-header">
     <span class="hdr-id">SYS_ID: MURAT_ARCH_2025_001</span>
     <span class="hdr-sep">// EĞİTİM TEKNOLOJİLERİ ATÖLYE //</span>
     <span id="live-ts">00:00:00</span>
   </header>
 
-  <!-- ARŞİV KUTUSU -->
   <main class="archive-box" id="archive-box">
 
-    <!-- ═══════════════════════════════════════════════
-         KLASÖR 1 — ARŞİV LOG / VİZYON
-         ID: proje_u1_vizyon_1
-    ═══════════════════════════════════════════════ -->
     <div class="folder active" id="proje_u1_vizyon_1">
-
       <div class="folder-tab">
         <span class="tab-code">CODE_001 //</span>
         <span class="tab-title">ARŞİV_LOG</span>
         <span class="tab-index">01</span>
       </div>
-
       <div class="folder-content">
-
         <div class="file-id">DOSYA_01 // VİZYON</div>
-
         <h1 class="f-title">DİJİTAL ÇAĞDA<br>TARİH YAZIMI</h1>
-
         <p class="f-sub">
           Geçmişin bilgisini modern web mimarisiyle yapılandıran
           eğitim teknolojileri atölyesi. Sınıf duvarlarını aşan,
           arşiv kadar kalıcı — portal kadar erişilebilir.
         </p>
-
         <div class="divider"></div>
-
         <div class="sys-log">
 <span class="l-ts">[00:00:01]</span>  SYS_LOG: INIT_SUCCESS
 <span class="l-ts">[00:00:02]</span>  ENV: <span class="l-ok">PRODUCTION</span>
@@ -656,9 +627,7 @@
 <span class="l-ts">[00:00:06]</span>  PORTAL_09: <span class="l-warn">STANDBY</span>
 <span class="l-ts">[00:00:07]</span>  PORTAL_10: <span class="l-warn">STANDBY</span>
 <span class="l-ts">[00:00:09]</span>  STATUS: <span class="l-ok">ARCHIVE_OPERATIONAL</span></div>
-
         <div class="divider"></div>
-
         <p style="font-family:'JetBrains Mono',monospace;
                   font-size:clamp(8px,1.8vw,9.5px);
                   letter-spacing:0.09em;opacity:0.35;line-height:1.9;">
@@ -666,37 +635,24 @@
           MEB / TYMM UYUMLU<br>
           ÖZEL BATMAN BOĞAZİÇİ KOLEJİ MTAL
         </p>
-
       </div>
-    </div><!-- /proje_u1_vizyon_1 -->
+    </div>
 
-
-    <!-- ═══════════════════════════════════════════════
-         KLASÖR 2 — DİJİTAL EKOSİSTEM
-         ID: proje_u2_ekosistem_1
-    ═══════════════════════════════════════════════ -->
     <div class="folder" id="proje_u2_ekosistem_1">
-
       <div class="folder-tab">
         <span class="tab-code">CODE_002 //</span>
         <span class="tab-title">EKOSİSTEM</span>
         <span class="tab-index">02</span>
       </div>
-
       <div class="folder-content">
-
         <div class="file-id">DOSYA_02 // DİJİTAL_ARŞİV</div>
-
         <h2 class="f-title">Dijital Arşiv<br>& Portal Ağı</h2>
-
         <p class="f-sub">
           Batman yerel belleğini dijitale aktaran Dijital Tarih Müzesi.
           Sözlü tarih, fotoğraf arşivi ve harita katmanlarıyla
           bölge hafızasını koruyan interaktif ekosistem.
         </p>
-
         <div class="divider"></div>
-
         <div class="portal-links">
           <a class="p-link" href="https://tarih.kirkyama.uk/sinif9.html">
             <span class="p-link-id">PORTAL_09</span>
@@ -719,37 +675,24 @@
             <span class="p-link-arrow">→</span>
           </a>
         </div>
-
         <div class="divider"></div>
-
         <p style="font-size:clamp(11px,2.4vw,13px);line-height:1.72;opacity:0.52;">
           Bağlam-temelli sınav motoru, interaktif harita katmanları
           ve dönem simülasyonlarıyla donatılmış sıfır-bağımlılık
           eğitim platformu.
         </p>
-
       </div>
-    </div><!-- /proje_u2_ekosistem_1 -->
+    </div>
 
-
-    <!-- ═══════════════════════════════════════════════
-         KLASÖR 3 — GELİŞTİRİCİ KİMLİĞİ / TEKNOLOJİ
-         ID: proje_u3_teknoloji_1
-    ═══════════════════════════════════════════════ -->
     <div class="folder" id="proje_u3_teknoloji_1">
-
       <div class="folder-tab">
         <span class="tab-code">CODE_003 //</span>
         <span class="tab-title">TEKNOLOJİ</span>
         <span class="tab-index">03</span>
       </div>
-
       <div class="folder-content">
-
         <div class="file-id">DOSYA_03 // STACK</div>
-
         <h2 class="f-title">Geliştirici<br>Kimliği</h2>
-
         <div class="tech-tags">
           <span class="tag">Vanilla JS</span>
           <span class="tag">Canvas API</span>
@@ -760,9 +703,7 @@
           <span class="tag">Web Audio API</span>
           <span class="tag">Zero-Dependency</span>
         </div>
-
         <div class="divider"></div>
-
         <div class="code-block"><span class="cm">// motor_sinif10.js</span>
 <span class="kw">class</span> <span class="fn">StrokeEngine</span> {
   <span class="kw">constructor</span>(canvas) {
@@ -774,7 +715,6 @@
 }
 <span class="cm">// WcBlob: watercolour engine</span>
 <span class="cm">// α ≤ 0.18, slow grow speed</span></div>
-
         <p style="font-family:'JetBrains Mono',monospace;
                   font-size:clamp(8.5px,1.9vw,10.5px);
                   line-height:1.85;opacity:0.42;letter-spacing:0.05em;">
@@ -782,31 +722,19 @@
           R2 bucket: history-portal-assets<br>
           CDN: Cloudflare Workers dağıtımı
         </p>
-
       </div>
-    </div><!-- /proje_u3_teknoloji_1 -->
+    </div>
 
-
-    <!-- ═══════════════════════════════════════════════
-         KLASÖR 4 — KOLEKSİYON / ATÖLYE
-         ID: koleksiyon_u1_pul_1
-    ═══════════════════════════════════════════════ -->
     <div class="folder" id="koleksiyon_u1_pul_1">
-
       <div class="folder-tab">
         <span class="tab-code">CODE_004 //</span>
         <span class="tab-title">KOLEKSİYON</span>
         <span class="tab-index">04</span>
       </div>
-
       <div class="folder-content">
-
         <div class="file-id">DOSYA_04 // KİŞİSEL</div>
-
         <h2 class="f-title">Atölye &<br>Koleksiyonlar</h2>
-
         <div class="divider"></div>
-
         <div class="c-entry">
           <div class="c-label">ARŞİV_A // FİLATELİ</div>
           <div class="c-title">Posta Tarihi Araştırmaları</div>
@@ -815,7 +743,6 @@
             Kartpostal koleksiyonu.
           </div>
         </div>
-		
 		<div class="c-entry">
           <div class="c-label">ARŞİV_B // FOTOĞRAFÇILIK</div>
           <div class="c-title">Profesyonel ve Mobil Fotoğrafçılık</div>
@@ -823,7 +750,6 @@
             Dünya'ya vizor arkasından bakmanın ve zamanı dondurma telaşı.
           </div>
         </div>
-
         <div class="c-entry">
           <div class="c-label">ARŞİV_C // DOLMAKALEM</div>
           <div class="c-title">Platinum #3776 — Uç &amp; Mürekkep Günlüğü</div>
@@ -833,7 +759,6 @@
             akış-kâğıt uyumu denemeleri.
           </div>
         </div>
-
         <div class="c-entry">
           <div class="c-label">ARŞİV_D // SERA</div>
           <div class="c-title">Kasımpatı Çelikleme &amp; Sera Protokolü</div>
@@ -843,43 +768,30 @@
             kayıtları ve fenolojik gelişim takvimi.
           </div>
         </div>
-
       </div>
-    </div><!-- /koleksiyon_u1_pul_1 -->
+    </div>
 
-
-    <!-- ═══════════════════════════════════════════════
-         KLASÖR 5 — SİNYAL / VURGU
-         ID: proje_u5_sinyal_1
-    ═══════════════════════════════════════════════ -->
     <div class="folder" id="proje_u5_sinyal_1">
-
       <div class="folder-tab">
         <span class="tab-code">CODE_005 //</span>
         <span class="tab-title">SİNYAL</span>
         <span class="tab-index">05</span>
       </div>
-
       <div class="folder-content">
-
         <div class="file-id" style="color:rgba(196,160,64,0.52);">
           DOSYA_05 // KRİTİK_BÖLGE
         </div>
-
         <div class="signal-alert">
           <div class="sig-title">
             <span class="sig-pulse"></span>Tarihsel Hafızanın<br>Dijital İnşası
           </div>
         </div>
-
         <p class="f-sub">
           Dijital çağda tarihsel hafıza nasıl inşa ediliyor?
           Algoritmik arşivleme, kayıp belge riski ve eğitimde
           kaynak eleştirisinin yeni boyutları.
         </p>
-
         <div class="divider"></div>
-
         <div class="sig-stats">
           <div class="s-item">
             <span class="s-val">2</span>
@@ -898,9 +810,7 @@
             <span class="s-lbl">Arşiv Hafızası</span>
           </div>
         </div>
-
         <div class="divider"></div>
-
         <div class="sig-body">
     TYMM / 
     <a href="https://tymm.meb.gov.tr/beceriler/kavramsal-beceriler" 
@@ -917,18 +827,15 @@
     </a> 
     — Değişim ve Süreklilik ekseninde.
 </div>
-
         <div class="sig-footer">
           SIG_STATUS: TRANSMITTING //<br>
           END_OF_ARCHIVE //
         </div>
-
       </div>
-    </div><!-- /proje_u5_sinyal_1 -->
+    </div>
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="archive-footer">
     <div class="ftr-live">
       <div class="ftr-dot"></div>
@@ -938,18 +845,12 @@
     <span id="footer-folder-label">FOLDER: ARŞİV_LOG</span>
   </footer>
 
-
-  <!-- ══════════════════════════════════════════════
-       MİNİMAL VANILLA JS — Sıfır harici bağımlılık
-  ══════════════════════════════════════════════ -->
   <script>
     (function () {
       'use strict';
-
       const folders     = document.querySelectorAll('.folder');
       const footerLabel = document.getElementById('footer-folder-label');
 
-      /* Klasör tıklama */
       folders.forEach(folder => {
         folder.addEventListener('click', function () {
           if (this.classList.contains('active')) return;
@@ -960,7 +861,6 @@
         });
       });
 
-      /* Canlı saat */
       const tsEl = document.getElementById('live-ts');
       function tick() {
         const d = new Date();
@@ -970,7 +870,6 @@
       tick();
       setInterval(tick, 1000);
 
-      /* Klavye navigasyonu ← → */
       document.addEventListener('keydown', function (e) {
         const all = Array.from(folders);
         const idx = all.findIndex(f => f.classList.contains('active'));
@@ -979,9 +878,7 @@
         if (e.key === 'ArrowLeft')  next = Math.max(idx - 1, 0);
         if (next !== -1 && next !== idx) all[next].click();
       });
-
     })();
   </script>
-
 </body>
 </html>
