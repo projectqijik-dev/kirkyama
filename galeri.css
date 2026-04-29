@@ -1,0 +1,729 @@
+/* ================================================================
+   galeri.css  —  Kirkyama Modal Galeri Kütüphanesi
+   Çakışma koruması: tüm sınıflar "gk-" öneki taşır.
+   Bu dosyayı kirkyama_index.html <head> bölümüne link edin.
+================================================================ */
+
+/* ────────────────────────────────────────────────────────────────
+   DEĞİŞKENLER
+──────────────────────────────────────────────────────────────── */
+:root {
+  --gk-bg      : #111009;
+  --gk-gold    : #111009;
+  --gk-gold-lt : #e2c060;
+  --gk-parchment: #ddd0b4;
+  --gk-border  : rgba(255,255,255,0.08);
+  --gk-ease    : cubic-bezier(0.38, 0, 0.18, 1);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   1. TETIKLEYICI BUTONLAR
+   galeri.js tarafından .gallery-header içine enjekte edilir.
+──────────────────────────────────────────────────────────────── */
+.gk-ac-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.8vw, 11px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border: 1px solid var(--gk-gold);
+  color: var(--gk-gold);
+  background: transparent;
+  cursor: pointer;
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.gk-ac-btn:hover {
+  background: var(--gk-gold);
+  color: var(--gk-bg);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   1b. [data-galeri-ac] — GALERİ KARTI
+   Her zaman görünür, masaüstü ve mobil için eşit güçlü.
+   HTML'e tek satır dokunmaya gerek yok.
+──────────────────────────────────────────────────────────────── */
+
+/* ── Nabız animasyonu — sol köşedeki canlı nokta için ── */
+@keyframes gkNabiz {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(196,160,64,0.7); opacity: 1; }
+  60%       { box-shadow: 0 0 0 5px rgba(196,160,64,0);   opacity: 0.6; }
+}
+
+/* ── Süpürme parlaması — hover'da kartı soldan sağa tarar ── */
+@keyframes gkSuperme {
+  0%   { left: -60%; }
+  100% { left: 110%; }
+}
+
+/* ── KART YAPISI ── */
+[data-galeri-ac] {
+  position: relative;
+  cursor: pointer;
+  display: block;
+
+  /* Kenarlık çerçevesi — her zaman görünür */
+  border: 1px solid rgba(196,160,64,0.35);
+  border-bottom: 2px solid rgba(196,160,64,0.6);
+  border-radius: 2px;
+
+  /* İç boşluk: üst içerik + alt şerit için yer */
+  padding: clamp(10px,1.8vh,14px) clamp(10px,2vw,14px);
+  padding-bottom: clamp(32px,5vh,38px);   /* alt şerit için boşluk */
+
+  /* Çok hafif altın zemin */
+  background: rgba(196,160,64,0.04);
+
+  /* Geçişler */
+  transition:
+    border-color  0.28s ease,
+    background    0.28s ease,
+    transform     0.28s ease,
+    box-shadow    0.28s ease;
+
+  /* Taşmayı gizle (süpürme için) */
+  overflow: hidden;
+}
+
+/* ── HOVER ── */
+[data-galeri-ac]:hover {
+  border-color: var(--gk-gold);
+  background: rgba(196,160,64,0.08);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(196,160,64,0.25);
+}
+
+/* ── KLAVYE ODAĞI ── */
+[data-galeri-ac]:focus-visible {
+  outline: none;
+  border-color: var(--gk-gold);
+  box-shadow: 0 0 0 3px rgba(196,160,64,0.3);
+}
+
+/* ── HOVER SÜPÜRME PARLAMASI ── */
+[data-galeri-ac]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(196,160,64,0.07),
+    transparent
+  );
+  pointer-events: none;
+  /* Başlangıçta durur, hover'da tetiklenir */
+  animation: none;
+}
+
+[data-galeri-ac]:hover::before {
+  animation: gkSuperme 0.65s ease forwards;
+}
+
+/* ── ALT ŞERİT — her zaman görünür, "GALERİ" ibaresi ── */
+[data-galeri-ac]::after {
+  content: '';          /* İçerik JS tarafından .gk-alt-serit ile eklenir */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: clamp(26px,4vh,32px);
+
+  /* Altın gradyan taban */
+  background: linear-gradient(
+    135deg,
+    rgba(196,160,64,0.18) 0%,
+    rgba(196,160,64,0.08) 100%
+  );
+  border-top: 1px solid rgba(196,160,64,0.3);
+
+  /* Metin */
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7.5px, 1.4vw, 9px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gk-gold);
+  opacity: 0.85;
+
+  /* İçeriği ortala */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(8px,1.5vw,12px);
+
+  pointer-events: none;
+  transition: background 0.28s ease, opacity 0.28s ease;
+}
+
+[data-galeri-ac]:hover::after {
+  background: linear-gradient(
+    135deg,
+    rgba(196,160,64,0.28) 0%,
+    rgba(196,160,64,0.14) 100%
+  );
+  opacity: 1;
+}
+
+/* Filateli şeridi */
+[data-galeri-ac="filateli"]::after {
+  content: '▣  FOTOĞRAF ARŞİVİ  //  GALERİYİ AÇ  →';
+}
+
+/* Fotoğrafçılık şeridi */
+[data-galeri-ac="fotografcilik"]::after {
+  content: '◈  FOTOĞRAF ARŞİVİ  //  GALERİYİ AÇ  →';
+}
+
+/* Tanımsız galeri id'leri için genel fallback */
+[data-galeri-ac]:not([data-galeri-ac="filateli"]):not([data-galeri-ac="fotografcilik"])::after {
+  content: '◉  GALERİYİ AÇ  →';
+}
+
+/* ── CANLILI NOKTA — sol üst köşe ── */
+/* Pseudo element doldu, JS küçük bir span enjekte eder */
+/* Ama ::before kullandık — alternatif olarak box-shadow ile yapıyoruz */
+[data-galeri-ac] {
+  /* Sol üstte küçük altın köşe aksanı */
+  box-shadow:
+    inset 3px 3px 0 rgba(196,160,64,0.35),
+    inset -3px -3px 0 rgba(196,160,64,0.08);
+}
+
+[data-galeri-ac]:hover {
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(196,160,64,0.25),
+    inset 3px 3px 0 rgba(196,160,64,0.5);
+}
+
+/* ── NABIIZ NOKTASI (galeri.js tarafından enjekte edilen .gk-nabiz-nokta) ── */
+.gk-nabiz-nokta {
+  position: absolute;
+  top:   8px;
+  right: 8px;
+  width:  8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gk-gold);
+  animation: gkNabiz 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Halkalar animasyonu */
+.gk-nabiz-nokta::before,
+.gk-nabiz-nokta::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--gk-gold);
+  animation: gkHalka 2.4s ease-out infinite;
+  opacity: 0;
+}
+
+.gk-nabiz-nokta::after {
+  animation-delay: 0.8s;
+}
+
+@keyframes gkHalka {
+  0%   { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   2. MODAL ARKA PLAN KAPLAĞI
+──────────────────────────────────────────────────────────────── */
+.gk-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s var(--gk-ease), visibility 0s linear 0.32s;
+}
+
+.gk-modal.gk-acik {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.32s var(--gk-ease), visibility 0s linear 0s;
+}
+
+/* Blurlu cam arkaplan */
+.gk-modal-perde {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 8, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   3. MODAL PENCERE KÜTLESİ
+──────────────────────────────────────────────────────────────── */
+.gk-modal-pencere {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 0 1px rgba(196,160,64,0.1);
+  transform: translateY(6px) scale(0.994);
+  transition: transform 0.35s var(--gk-ease);
+}
+
+.gk-modal.gk-acik .gk-modal-pencere {
+  transform: translateY(0) scale(1);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   4. MODAL BAŞLIK ÇUBUĞU
+──────────────────────────────────────────────────────────────── */
+.gk-modal-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: clamp(14px, 2.5vw, 22px) clamp(16px, 4vw, 44px);
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(196,160,64,0.18);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.gk-modal-header-bilgi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gk-modal-baslik {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(14px, 3.5vw, 21px);
+  color: var(--gk-gold-lt);
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.gk-modal-altbaslik {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7.5px, 1.5vw, 9.5px);
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.gk-modal-sayac-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 1.3vw, 8.5px);
+  color: var(--gk-gold);
+  opacity: 0.6;
+  letter-spacing: 0.14em;
+}
+
+/* Kapat butonu */
+.gk-modal-kapat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.8vw, 11px);
+  letter-spacing: 0.1em;
+  padding: 9px 16px;
+  border: 1px solid var(--gk-gold);
+  color: var(--gk-gold);
+  background: transparent;
+  cursor: pointer;
+  border-radius: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.gk-modal-kapat:hover {
+  background: var(--gk-gold);
+  color: var(--gk-bg);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   5. MODAL GÖVDE — kaydırılabilir ızgara alanı
+──────────────────────────────────────────────────────────────── */
+.gk-modal-govde {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--gk-bg);
+  background-image:
+    repeating-linear-gradient(90deg,
+      transparent, transparent 46px,
+      rgba(255,255,255,0.012) 46px,
+      rgba(255,255,255,0.012) 47px),
+    repeating-linear-gradient(0deg,
+      transparent, transparent 46px,
+      rgba(255,255,255,0.012) 46px,
+      rgba(255,255,255,0.012) 47px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(196,160,64,0.25) transparent;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   6. KÜÇÜK RESİM IZGARASI
+──────────────────────────────────────────────────────────────── */
+.gk-izgara {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 18vw, 210px), 1fr));
+  gap: clamp(10px, 2vw, 18px);
+  padding: clamp(20px, 4vw, 44px);
+}
+
+.gk-kart {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--gk-border);
+  border-radius: 2px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.025);
+  transition:
+    border-color 0.26s ease,
+    transform 0.28s var(--gk-ease),
+    box-shadow 0.26s ease;
+}
+
+.gk-kart:hover {
+  border-color: var(--gk-gold);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55), 0 0 0 1px rgba(196,160,64,0.4);
+}
+
+.gk-kart:focus-visible {
+  outline: 2px solid var(--gk-gold);
+  outline-offset: 2px;
+}
+
+.gk-kart-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.68;
+  transition: opacity 0.3s ease, transform 0.5s var(--gk-ease);
+  display: block;
+}
+
+.gk-kart:hover .gk-kart-img {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* Sıra numarası rozeti */
+.gk-kart::after {
+  content: attr(data-sira);
+  position: absolute;
+  bottom: 5px;
+  right: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+.gk-kart:hover::after { opacity: 1; }
+
+/* ────────────────────────────────────────────────────────────────
+   6b. İLERLEME ÇUBUĞU (progress bar) — başlık altında
+──────────────────────────────────────────────────────────────── */
+.gk-ilerleme-satin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.gk-ilerleme-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 200px;
+}
+
+.gk-ilerleme-dolu {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gk-gold), var(--gk-gold-lt));
+  border-radius: 2px;
+  transition: width 0.45s var(--gk-ease);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   6c. KART GİRİŞ ANİMASYONU
+       .gk-kart-giris sınıfı galeri.js tarafından eklenir.
+       animation-delay JS tarafından satır içi atanır.
+──────────────────────────────────────────────────────────────── */
+@keyframes gkKartGiris {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.gk-kart-giris {
+  animation: gkKartGiris 0.32s var(--gk-ease) both;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   6d. "DAHA FAZLA YÜKLE" BUTONU ALANI
+──────────────────────────────────────────────────────────────── */
+.gk-daha-fazla-alan {
+  display: flex;
+  justify-content: center;
+  padding: clamp(20px, 4vw, 40px) clamp(20px, 4vw, 44px);
+  padding-top: 0;
+}
+
+.gk-daha-fazla-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.8vw, 11px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border: 1px solid rgba(196,160,64,0.4);
+  color: var(--gk-gold);
+  background: transparent;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.22s ease, border-color 0.22s ease,
+              color 0.22s ease, transform 0.22s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Altın parlaması — hover animasyonu */
+.gk-daha-fazla-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg,
+    transparent, rgba(196,160,64,0.1), transparent);
+  transition: left 0.4s ease;
+}
+
+.gk-daha-fazla-btn:hover {
+  background: rgba(196,160,64,0.1);
+  border-color: var(--gk-gold);
+  transform: translateY(-2px);
+}
+
+.gk-daha-fazla-btn:hover::before {
+  left: 130%;
+}
+
+.gk-daha-fazla-btn:disabled {
+  opacity: 0.45;
+  cursor: wait;
+  transform: none;
+}
+
+.gk-df-sayac {
+  font-size: clamp(7.5px, 1.5vw, 9px);
+  opacity: 0.55;
+  letter-spacing: 0.1em;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   7. BOŞ DURUM (resim eklenmemiş)
+──────────────────────────────────────────────────────────────── */
+.gk-bos {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  gap: 14px;
+  opacity: 0.38;
+  text-align: center;
+}
+
+.gk-bos-kod {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--gk-gold);
+  text-transform: uppercase;
+}
+
+.gk-bos-metin {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(13px, 2.5vw, 16px);
+  color: var(--gk-parchment);
+  line-height: 1.7;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   8. LİGHTBOX — büyük resim katmanı (z-index modal'ın üstünde)
+──────────────────────────────────────────────────────────────── */
+.gk-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(6, 6, 5, 0.97);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.26s ease, visibility 0s linear 0.26s;
+}
+
+.gk-lightbox.gk-acik {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.26s ease, visibility 0s linear 0s;
+}
+
+/* Üst çubuk */
+.gk-lb-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(12px, 2.5vw, 22px) clamp(14px, 4vw, 38px);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
+  pointer-events: none;
+}
+
+.gk-lb-sayac {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.8vw, 11px);
+  letter-spacing: 0.18em;
+  color: var(--gk-gold);
+  opacity: 0.75;
+  pointer-events: auto;
+}
+
+.gk-lb-kapat {
+  background: transparent;
+  border: 1px solid rgba(196,160,64,0.5);
+  color: var(--gk-gold-lt);
+  width: clamp(36px, 5.5vw, 46px);
+  height: clamp(36px, 5.5vw, 46px);
+  font-size: clamp(20px, 3.5vw, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  pointer-events: auto;
+  transition: background 0.2s, transform 0.2s;
+  line-height: 1;
+}
+
+.gk-lb-kapat:hover {
+  background: rgba(196,160,64,0.18);
+  transform: scale(1.08);
+}
+
+/* Büyük resim */
+.gk-lb-resim {
+  max-width: min(90vw, 1300px);
+  max-height: min(84vh, 950px);
+  object-fit: contain;
+  border: 1.5px solid rgba(196,160,64,0.32);
+  box-shadow: 0 0 80px rgba(0,0,0,0.85);
+  border-radius: 2px;
+  display: block;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.gk-lb-resim.gk-gecis {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+/* Önceki / Sonraki oklar */
+.gk-lb-ok {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.48);
+  border: 1px solid rgba(196,160,64,0.3);
+  color: var(--gk-gold-lt);
+  font-size: clamp(22px, 4.5vw, 34px);
+  width: clamp(40px, 6.5vw, 54px);
+  height: clamp(40px, 6.5vw, 54px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, border-color 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  line-height: 1;
+}
+
+.gk-lb-ok:hover { background: rgba(196,160,64,0.18); border-color: var(--gk-gold); }
+.gk-lb-ok.gk-sol { left:  clamp(8px, 2vw, 22px); }
+.gk-lb-ok.gk-sag { right: clamp(8px, 2vw, 22px); }
+
+/* Alt ipucu */
+.gk-lb-altbar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  padding: clamp(10px, 2vw, 18px) 24px;
+  background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 1.4vw, 8.5px);
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   9. MOBİL
+──────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .gk-izgara {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 14px;
+  }
+  .gk-lb-ok { width: 44px; height: 44px; font-size: 24px; }
+  .gk-lb-altbar { display: none; }
+}
