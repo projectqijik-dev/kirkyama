@@ -6,6 +6,7 @@
   <title>Murat Mutlu — Dijital Çağda Tarih Öğretimi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="galeri.css" />
   <style>
     /* ============================================================
        CSS VARIABLES
@@ -611,10 +612,13 @@
       </div>
       <div class="folder-content">
         <div class="file-id">DOSYA_01 // VİZYON</div>
-        <h1 class="f-title">DİJİTAL ÇAĞDA<br>TARİH ÖĞRETİMİ</h1>
+        <h1 class="f-title">DİJİTAL ÇAĞDA<br>TARİH YAZIMI</h1>
         <p class="f-sub">
           Geçmişin bilgisini modern web mimarisiyle yapılandıran
           eğitim teknolojileri atölyesi. Sınıf duvarlarını aşan,
+		  bağlam-temelli sınav motoru, interaktif harita katmanları
+          ve dönem simülasyonlarıyla donatılmış sıfır-bağımlılık
+          eğitim platformu.
           arşiv kadar kalıcı — portal kadar erişilebilir.
         </p>
         <div class="divider"></div>
@@ -633,7 +637,7 @@
                   letter-spacing:0.09em;opacity:0.35;line-height:1.9;">
           SINIF 9 • 10 • 11<br>
           MEB / TYMM UYUMLU<br>
-          ÖZEL BATMAN BOĞAZİÇİ KOLEJİ MTAL
+          MURAT MUTLU
         </p>
       </div>
     </div>
@@ -669,7 +673,7 @@
             <span class="p-link-name">11. Sınıf — Devrimler Çağı</span>
             <span class="p-link-arrow">→</span>
           </a>
-          <a class="p-link" href="https://tarih.kirkyama.uk/muze.html">
+          <a class="p-link" href="#">
             <span class="p-link-id">BATMAN_MZ</span>
             <span class="p-link-name">Dijital Tarih Müzesi</span>
             <span class="p-link-arrow">→</span>
@@ -698,7 +702,6 @@
           <span class="tag">Canvas API</span>
           <span class="tag">Cloudflare R2</span>
           <span class="tag">CSS clamp()</span>
-          <span class="tag">MEB/TYMM</span>
           <span class="tag">Dağıtık Mimari</span>
           <span class="tag">Web Audio API</span>
           <span class="tag">Zero-Dependency</span>
@@ -737,7 +740,9 @@
         <div class="divider"></div>
         <div class="c-entry">
           <div class="c-label">ARŞİV_A // FİLATELİ</div>
-          <div class="c-title">Posta Tarihi Araştırmaları</div>
+          <div class="c-title" data-galeri-ac="filateli">
+  Posta Pulu ve Kartpostal Koleksiyonu →
+</div>
           <div class="c-text">
             Kişisel pul koleksiyonu ve filateli araştırmaları.
             Kartpostal koleksiyonu.
@@ -745,7 +750,9 @@
         </div>
 		<div class="c-entry">
           <div class="c-label">ARŞİV_B // FOTOĞRAFÇILIK</div>
-          <div class="c-title">Profesyonel ve Mobil Fotoğrafçılık</div>
+          <div class="c-title" data-galeri-ac="fotografcilik">
+  Profesyonel ve Mobil Fotoğrafçılık →
+</div>
           <div class="c-text">
             Dünya'ya vizor arkasından bakmanın ve zamanı dondurma telaşı.
           </div>
@@ -880,5 +887,9 @@
       });
     })();
   </script>
+<script src="galeri-filateli-data.js"></script>
+<script src="galeri-fotografcilik-data.js"></script>
+<script src="galeri.js"></script>
+
 </body>
 </html>
