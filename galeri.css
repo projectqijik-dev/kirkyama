@@ -9,7 +9,7 @@
 ──────────────────────────────────────────────────────────────── */
 :root {
   --gk-bg      : #111009;
-  --gk-gold    : #111009;
+  --gk-gold    : #c4a040;
   --gk-gold-lt : #e2c060;
   --gk-parchment: #ddd0b4;
   --gk-border  : rgba(255,255,255,0.08);
@@ -716,13 +716,199 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   9. MOBİL
+   9. VİDEO GALERİSİ STİLLERİ
+──────────────────────────────────────────────────────────────── */
+
+/* Video ızgara: 2 sütun sabit, büyük ekranda daha geniş */
+.gk-video-izgara {
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: clamp(14px, 2.5vw, 24px) !important;
+}
+
+/* Video kart: fotoğraf kartından farklı oran (16:9) */
+.gk-video-kart {
+  aspect-ratio: 16 / 9 !important;
+  background-color: #0d0d0b;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* Gradyan overlay — başlık okunabilirliği */
+  position: relative;
+}
+
+/* Thumbnail üstüne karartma — her zaman görünür */
+.gk-video-kart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0.25) 50%,
+    rgba(0,0,0,0.82) 100%
+  );
+  z-index: 0;
+  transition: background 0.3s ease;
+}
+
+.gk-video-kart:hover::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.1)  0%,
+    rgba(0,0,0,0.3)  40%,
+    rgba(0,0,0,0.88) 100%
+  );
+}
+
+/* Platform rozeti — sağ üst köşe */
+.gk-video-rozet {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  padding: 3px 7px;
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(196,160,64,0.4);
+  color: var(--gk-gold);
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* Büyük oynat ikonu — merkez, hover'da belirir */
+.gk-video-oynat {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  font-size: clamp(36px, 6vw, 54px);
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+  text-shadow: 0 0 30px rgba(0,0,0,0.9);
+}
+
+/* Mobil: oynat ikonu her zaman görünür */
+@media (hover: none) {
+  .gk-video-oynat {
+    opacity: 1;
+    transform: scale(1);
+    font-size: clamp(28px, 8vw, 42px);
+    color: rgba(255,255,255,0.7);
+  }
+}
+
+.gk-video-kart:hover .gk-video-oynat {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Başlık şeridi — alt */
+.gk-video-serit {
+  position: relative;
+  z-index: 3;
+  padding: clamp(8px,1.5vw,12px) clamp(10px,2vw,16px);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Video başlığı — Cinzel, altın */
+.gk-video-baslik {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: clamp(10px, 1.8vw, 14px);
+  color: var(--gk-parchment);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.22s ease;
+}
+
+.gk-video-kart:hover .gk-video-baslik {
+  color: var(--gk-gold-lt);
+}
+
+/* Süre (isteğe bağlı) */
+.gk-video-sure {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 1.2vw, 8.5px);
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.12em;
+}
+
+/* ── LİGHTBOX VİDEO MODU ── */
+
+/* İframe sarmalayıcı */
+.gk-lb-video-sarap {
+  display: none;                /* JS tarafından flex'e çevrilir */
+  width:  min(90vw, 1200px);
+  height: min(80vh, 675px);    /* 16:9 maksimum */
+  position: relative;
+  background: #000;
+  border: 1.5px solid rgba(196,160,64,0.3);
+  box-shadow: 0 0 80px rgba(0,0,0,0.9);
+  border-radius: 2px;
+}
+
+/* 16:9 oranı korumak için aspect-ratio */
+@supports (aspect-ratio: 16/9) {
+  .gk-lb-video-sarap {
+    width: min(90vw, 1200px);
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 80vh;
+  }
+}
+
+/* iframe tam alanı doldursun */
+.gk-lb-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
+
+/* Lightbox üst çubuğunda video başlığı */
+.gk-lb-video-baslik {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(11px, 2.2vw, 15px);
+  font-weight: 600;
+  color: var(--gk-gold-lt);
+  letter-spacing: 0.06em;
+  max-width: 70vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   10. MOBİL
 ──────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .gk-izgara {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 8px;
     padding: 14px;
+  }
+  /* Mobilde video ızgara 1 sütun */
+  .gk-video-izgara {
+    grid-template-columns: 1fr !important;
   }
   .gk-lb-ok { width: 44px; height: 44px; font-size: 24px; }
   .gk-lb-altbar { display: none; }
