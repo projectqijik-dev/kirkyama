@@ -1,7 +1,6 @@
 /* ================================================================
    galeri.css  —  Kirkyama Modal Galeri Kütüphanesi
    Çakışma koruması: tüm sınıflar "gk-" öneki taşır.
-   Bu dosyayı kirkyama_index.html <head> bölümüne link edin.
 ================================================================ */
 
 /* ────────────────────────────────────────────────────────────────
@@ -346,8 +345,9 @@
   letter-spacing: 0.1em;
   padding: 9px 16px;
   border: 1px solid var(--gk-gold);
-  color: var(--gk-gold);
-  background: transparent;
+  color: var(--gk-gold-lt);
+  background: rgba(196,160,64,0.15);
+  box-shadow: 0 0 0 1px rgba(196,160,64,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
   cursor: pointer;
   border-radius: 2px;
   text-transform: uppercase;
@@ -514,9 +514,10 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 13px 28px;
-  border: 1px solid rgba(196,160,64,0.4);
-  color: var(--gk-gold);
-  background: transparent;
+  border: 1px solid rgba(196,160,64,0.7);
+  color: var(--gk-gold-lt);
+  background: rgba(196,160,64,0.12);
+  box-shadow: 0 0 0 1px rgba(196,160,64,0.2), 0 4px 14px rgba(0,0,0,0.4);
   cursor: pointer;
   border-radius: 2px;
   transition: background 0.22s ease, border-color 0.22s ease,
