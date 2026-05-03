@@ -41,7 +41,7 @@
     html, body {
       width: 100%; 
       height: 100%;
-      height: 100dvh; /* Mobil tarayıcı çubukları için dinamik yükseklik */
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -67,7 +67,7 @@
        HEADER
     ============================================================ */
     .archive-header {
-      flex: 0 0 auto; /* Sabit yükseklik, esnemez */
+      flex: 0 0 auto;
       height: 7vh;
       display: flex;
       align-items: center;
@@ -90,7 +90,7 @@
        ARCHIVE BOX
     ============================================================ */
     .archive-box {
-      flex: 1; /* Kalan tüm alanı kapla, header ve footer'ı sıkıştırma */
+      flex: 1;
       display: flex;
       flex-direction: row;
       overflow: hidden;
@@ -103,7 +103,6 @@
       position: relative;
       display: flex;
       flex-direction: row;
-      /* Kapalıyken sadece sekme genişliği */
       flex: 0 0 var(--tab-w);
       min-width: var(--tab-w);
       overflow: hidden;
@@ -114,13 +113,11 @@
 
     .folder:last-child { border-right: none; }
 
-    /* Açık klasör — kalan tüm alanı al */
     .folder.active {
       flex: 1 1 0;
       cursor: default;
     }
 
-    /* Sağ kenar gölgesi */
     .folder::after {
       content: '';
       position: absolute;
@@ -131,7 +128,6 @@
       z-index: 5;
     }
 
-    /* Kâğıt doku */
     .folder::before {
       content: '';
       position: absolute; inset: 0;
@@ -144,6 +140,22 @@
     #proje_u1_vizyon_1    { background-color: var(--parchment); }
     #proje_u2_ekosistem_1 { background-color: var(--sage); }
     #proje_u3_teknoloji_1 { background-color: var(--grey-blue); }
+    
+    /* YENİ EKLENEN ÖZGEÇMİŞ KLASÖRÜ RENK VE IŞIK AYARLARI */
+    #proje_u4_cv_1 { background-color: #2F2C36; }
+    #proje_u4_cv_1 .tab-title { color: var(--parchment); }
+    #proje_u4_cv_1 .tab-code  { color: var(--parchment); opacity: 0.55; }
+    #proje_u4_cv_1 .tab-index { color: var(--parchment); opacity: 0.4; }
+    #proje_u4_cv_1:not(.active):hover .tab-title { color: #fff; }
+    #proje_u4_cv_1 .f-title { color: var(--parchment); }
+    #proje_u4_cv_1 .f-sub { color: rgba(255,255,255,0.65); }
+    #proje_u4_cv_1 .file-id { color: rgba(221,208,180,0.5); }
+    #proje_u4_cv_1 .divider { background: linear-gradient(90deg, rgba(221,208,180,0.3) 0%, transparent 85%); }
+    #proje_u4_cv_1 .c-label { color: rgba(221,208,180,0.6); }
+    #proje_u4_cv_1 .c-title { color: var(--parchment); }
+    #proje_u4_cv_1 .c-text { color: rgba(255,255,255,0.65); }
+    #proje_u4_cv_1 .c-entry { border-bottom: 1px dashed rgba(255,255,255,0.15); }
+
     #koleksiyon_u1_pul_1  { background-color: var(--warm-tan); }
     #proje_u5_sinyal_1 {
       background-color: var(--anthracite);
@@ -251,7 +263,6 @@
     /* ============================================================
        İÇERİK — ORTAK ELEMANLAR
     ============================================================ */
-
     .file-id {
       font-family: 'JetBrains Mono', monospace;
       font-size: clamp(8px, 1.8vw, 10px);
@@ -565,7 +576,7 @@
        FOOTER
     ============================================================ */
     .archive-footer {
-      flex: 0 0 auto; /* Sabit yükseklik, esnemez */
+      flex: 0 0 auto;
       height: 7vh;
       display: flex;
       align-items: center;
@@ -605,6 +616,7 @@
 
   <main class="archive-box" id="archive-box">
 
+    <!-- KLASÖR 1 — ARŞİV LOG / VİZYON -->
     <div class="folder active" id="proje_u1_vizyon_1">
       <div class="folder-tab">
         <span class="tab-code">CODE_001 //</span>
@@ -643,6 +655,7 @@
       </div>
     </div>
 
+    <!-- KLASÖR 2 — DİJİTAL EKOSİSTEM -->
     <div class="folder" id="proje_u2_ekosistem_1">
       <div class="folder-tab">
         <span class="tab-code">CODE_002 //</span>
@@ -689,6 +702,7 @@
       </div>
     </div>
 
+    <!-- KLASÖR 3 — GELİŞTİRİCİ KİMLİĞİ -->
     <div class="folder" id="proje_u3_teknoloji_1">
       <div class="folder-tab">
         <span class="tab-code">CODE_003 //</span>
@@ -729,65 +743,16 @@
       </div>
     </div>
 
-    <div class="folder" id="koleksiyon_u1_pul_1">
+    <!-- KLASÖR 4 — SİNYAL / VURGU -->
+    <div class="folder" id="proje_u5_sinyal_1">
       <div class="folder-tab">
         <span class="tab-code">CODE_004 //</span>
-        <span class="tab-title">KOLEKSİYON</span>
+        <span class="tab-title">SİNYAL</span>
         <span class="tab-index">04</span>
       </div>
       <div class="folder-content">
-        <div class="file-id">DOSYA_04 // KİŞİSEL</div>
-        <h2 class="f-title">Atölye &<br>Koleksiyonlar</h2>
-        <div class="divider"></div>
-        <div class="c-entry">
-          <div class="c-label">ARŞİV_A // FİLATELİ</div>
-          <div class="c-title" data-galeri-ac="filateli">
-  Posta Pulu ve Kartpostal Koleksiyonu →
-</div>
-          <div class="c-text">
-            <em>Kişisel pul koleksiyonu ve filateli araştırmaları.
-            Kartpostal koleksiyonu.</em>
-          </div>
-        </div>
-		<div class="c-entry">
-          <div class="c-label">ARŞİV_B // FOTOĞRAFÇILIK</div>
-          <div class="c-title" data-galeri-ac="fotografcilik">
-  Profesyonel ve Mobil Fotoğrafçılık
-</div>
-          <div class="c-text">
-            <em>Dünya döner dört bir yana, bunlar dönmediği anlar.</em>
-          </div>
-        </div>
-		<div class="c-entry">
-          <div class="c-label">ARŞİV_C // Video Arşivi</div>
-		  <div class="c-title" data-galeri-ac="video">
-  Video Arşivi
-</div>
-          <div class="c-text">
-            <em>Söyleşiler, film ve dizilerden not alınan videolar.</em> 
-          </div>
-        </div>
-        <div class="c-entry">
-          <div class="c-label">ARŞİV_D // DOLMAKALEM</div>
-          <div class="c-title">Platinum #3776 — Uç &amp; Mürekkep Günlüğü</div>
-          <div class="c-text">
-            Platinum Century serisi nib notları, Iroshizuku mürekkep
-            karşılaştırmaları. Arşiv belgeleri için optimal
-            akış-kâğıt uyumu denemeleri.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="folder" id="proje_u5_sinyal_1">
-      <div class="folder-tab">
-        <span class="tab-code">CODE_005 //</span>
-        <span class="tab-title">SİNYAL</span>
-        <span class="tab-index">05</span>
-      </div>
-      <div class="folder-content">
         <div class="file-id" style="color:rgba(196,160,64,0.52);">
-          DOSYA_05 // KRİTİK_BÖLGE
+          DOSYA_04 // KRİTİK_BÖLGE
         </div>
         <div class="signal-alert">
           <div class="sig-title">
@@ -838,6 +803,176 @@
         <div class="sig-footer">
           SIG_STATUS: TRANSMITTING //<br>
           END_OF_ARCHIVE //
+        </div>
+      </div>
+    </div>
+
+    <!-- KLASÖR 5 — ÖZGEÇMİŞ / CV -->
+    <div class="folder" id="proje_u4_cv_1">
+      <div class="folder-tab">
+        <span class="tab-code">CODE_005 //</span>
+        <span class="tab-title">ÖZGEÇMİŞ</span>
+        <span class="tab-index">05</span>
+      </div>
+      <div class="folder-content">
+        <div class="file-id">DOSYA_05 // CURRICULUM_VITAE</div>
+
+        <h2 class="f-title">Murat Mutlu</h2>
+        <p class="f-sub">
+          Tarih Öğretmeni &amp; Eğitim Teknolojileri Geliştiricisi.<br>
+          Sınıfı bir laboratuvar, tarihi ise canlı bir araştırma alanı olarak gören biri.
+        </p>
+        <div class="divider"></div>
+
+        <!-- PROFİL -->
+        <div class="c-entry">
+          <div class="c-label">PROFİL // ÖZET</div>
+          <div class="c-title">Kim Olduğum</div>
+          <div class="c-text">
+            Fırat Üniversitesi Tarih mezunuyum; pedagojik formasyonumu Atatürk Üniversitesi'nde tamamladım, siyasi tarihe olan merakım beni Anadolu Üniversitesi'nde Uluslararası İlişkiler lisansına taşıdı — hâlâ devam ediyorum. Öğretmenliği salt bilgi aktarımı değil, öğrencinin geçmişle bağ kurduğu anı tasarlamak olarak görüyorum. Bunun için sınıfa NASA araştırmacısı davet ettim, birleştirilmiş köy sınıflarında ders anlattım, pandemi krizinde okulumun dijital omurgasını kurdum ve şu an öğrencilerim için bağlam-temelli sınav motorları ile interaktif tarih portalları geliştiriyorum. Yeni şeyler öğrenmeye açığım; ama öğrendiklerimi test etmeden içselleştirdiğimi düşünmüyorum.
+          </div>
+        </div>
+
+        <!-- DENEYİM 01 -->
+        <div class="c-entry">
+          <div class="c-label">DENEYİM_01 // ÖĞRETMENLİK & LİDERLİK</div>
+          <div class="c-title">Tarih Öğretmeni — Özel Batman Boğaziçi Koleji</div>
+          <div class="c-text">
+            <em style="opacity:0.6;font-size:0.95em;">Ağustos 2019 – Haziran 2024 · Batman</em><br><br>
+            5 yıl boyunca 9., 10. ve 11. sınıflara tarih öğrettim. Öğrencilerin derse ilgi duyması için soyut tarihi somutlaştırmayı esas aldım: konularla örtüşen film, kitap ve müzik önerileri verdim; müze ziyaretleri planladım ve öğrencilerden geri dönüş istedim — salt anlatı değil, diyalog.
+            <br><br>
+            İlk yılımda rehber öğretmeni olduğum Uçak Bakım sınıfı için NASA araştırmacısı Dr. Umut Yıldız'ı Batman'a davet ettim. O buluşma, öğrenciler için sınıfın dışında bir ufuk açtı.
+            <br><br>
+            Pandemi okulları kapattığında okul yönetimi adına uzaktan eğitim altyapısı için şirketlerle müzakere yürüttüm; süreci koordine ettim ve tüm öğretmen ile idari personele Zoom, Google Classroom, MS Teams ile dijital güvenlik ve siber zorbalık konularında eğitim verdim. Kriz, kurumsal kapasite inşasına dönüştü.
+          </div>
+        </div>
+
+        <!-- DENEYİM 02 -->
+        <div class="c-entry">
+          <div class="c-label">DENEYİM_02 // SAHA & GÖNÜLLÜLÜK</div>
+          <div class="c-title">Sınıf Öğretmeni & TEGV Gönüllü Eğitmeni</div>
+          <div class="c-text">
+            <em style="opacity:0.6;font-size:0.95em;">Ekim 2016 – Haziran 2017 · Güvercinlik İlkokulu, Batman</em><br>
+            Beşiri'ye bağlı Güvercinlik Köyü'ndeki okulda, 1'den 4'e kadar dört sınıfın tek öğretmeniyidim. Birleştirilmiş sınıf yönetimi, kaynak kısıtlı ortamda pedagojik esneklik ve öğrenci odaklı planlama konusunda beni en çok biçimlendiren deneyimdir.
+            <br><br>
+            <em style="opacity:0.6;font-size:0.95em;">Ocak 2013 – Şubat 2014 · TEGV, Batman / Trabzon</em><br>
+            Türkiye Eğitim Gönüllüleri Vakfı bünyesinde yaklaşık 11 ay dezavantajlı bölgelerdeki ilköğretim öğrencilerine gönüllü eğitim verdim. Dönemin sonunda seçilerek <em>Ateşböceği Gezici Eğitim Tırı</em> sorumluluğu için 3 haftalık staj eğitimi aldım — bu pozisyon seçimle dolduruluyordu.
+          </div>
+        </div>
+
+        <!-- DENEYİM 03 -->
+        <div class="c-entry">
+          <div class="c-label">DENEYİM_03 // İÇERİK & SAHA ARAŞTIRMASI</div>
+          <div class="c-title">Editör & Arkeoloji Saha Stajyeri</div>
+          <div class="c-text">
+            <em style="opacity:0.6;font-size:0.95em;">Mart 2011 – Nisan 2012 · Fırat Üni. Bilgi İşlem AR-GE, Elazığ</em><br>
+            Üniversitenin AR-GE biriminde editör olarak proje raporları, kurumsal metinler ve web içerikleri ürettim. Atatürk İlkeleri ve İnkılap Tarihi Enstitüsü'nün web sitesini kurarak içerik yöneticiliğini üstlendim.
+            <br><br>
+            <em style="opacity:0.6;font-size:0.95em;">Temmuz – Eylül 2009 · Dicle Üni. Arkeoloji Bölümü, Diyarbakır</em><br>
+            Kortik Tepe ve Gre Abdurrahman kazılarına stajyer olarak katıldım. Tarihi sınıfta değil, toprağın altında aramak ne demekti, orada anladım.
+          </div>
+        </div>
+
+        <!-- EĞİTİM -->
+        <div class="c-entry">
+          <div class="c-label">EĞİTİM // AKADEMİ</div>
+          <div class="c-title">Akademik Arka Plan</div>
+          <div class="c-text">
+            <strong>Tarih</strong> — Fırat Üniversitesi, 2008–2013<br>
+            <strong>Pedagojik Formasyon</strong> — Atatürk Üniversitesi, 2016<br>
+            <strong>Uluslararası İlişkiler</strong> — Anadolu Üniversitesi, 2020–devam ediyor
+          </div>
+        </div>
+
+        <!-- SERTİFİKALAR -->
+        <div class="c-entry">
+          <div class="c-label">SERTİFİKASYON // PANEL</div>
+          <div class="c-title">Sertifikalar &amp; Akademik Katılımlar</div>
+          <div class="c-text">
+            <strong>Türkiye'de Dezenformasyon Direnci İnşa Etmek</strong> — NATO &amp; Bilgi Üniversitesi<br>
+            <strong>Arkeolojik Varlıkların Korunması ve Kurtarılması</strong> — Koç Üniversitesi<br>
+            <strong>Avrupa Birliği Eğitimi</strong> — Konrad-Adenauer-Stiftung / Ege Üniversitesi<br>
+            <strong>Uluslararası İlişkiler Sertifika Eğitimi</strong> — ADA / Ankara Üniversitesi<br>
+            <strong>21. YY. Vatandaşı Olmak</strong> — Anadolu Üniversitesi<br>
+            <strong>Afet Bilinci Eğitimi</strong> — AFAD<br>
+            <div class="divider" style="margin:10px 0;"></div>
+            <strong>Panelist</strong> — 96. Yılında Çanakkale Zaferi, Fırat Üniversitesi<br>
+            <strong>Konuşmacı</strong> — Türkiye-Çin İlişkileri Öğrenci Konferansı, Yalova Üniversitesi
+          </div>
+        </div>
+
+        <!-- ARAÇLAR -->
+        <div class="c-entry">
+          <div class="c-label">YETKİNLİKLER // ARAÇLAR</div>
+          <div class="c-title">Beceriler &amp; Teknolojiler</div>
+          <div class="c-text">
+            MS Office · WordPress / CMS · Uzaktan Eğitim (Zoom, Google Classroom, MS Teams)<br>
+            Vanilla JS · HTML/CSS · Cloudflare · Web Tabanlı Eğitim Platformu Geliştirme<br>
+            <em style="opacity:0.55;font-size:0.93em;">İngilizce: okuma ağırlıklı çalışma düzeyi</em>
+          </div>
+        </div>
+
+        <!-- İLETİŞİM -->
+        <div class="c-entry">
+          <div class="c-label">İLETİŞİM // BAĞLANTI</div>
+          <div class="c-title">
+            <a href="mailto:muratmutlu@tuta.io"
+               style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(196,160,64,0.3);">
+              muratmutlu@tuta.io
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- KLASÖR 6 — KOLEKSİYON / ATÖLYE -->
+    <div class="folder" id="koleksiyon_u1_pul_1">
+      <div class="folder-tab">
+        <span class="tab-code">CODE_006 //</span>
+        <span class="tab-title">KOLEKSİYON</span>
+        <span class="tab-index">06</span>
+      </div>
+      <div class="folder-content">
+        <div class="file-id">DOSYA_06 // KİŞİSEL</div>
+        <h2 class="f-title">Atölye &<br>Koleksiyonlar</h2>
+        <div class="divider"></div>
+        <div class="c-entry">
+          <div class="c-label">ARŞİV_A // FİLATELİ</div>
+          <div class="c-title" data-galeri-ac="filateli">
+  Posta Pulu ve Kartpostal Koleksiyonu →
+</div>
+          <div class="c-text">
+            <em>Kişisel pul koleksiyonu ve filateli araştırmaları.
+            Kartpostal koleksiyonu.</em>
+          </div>
+        </div>
+		<div class="c-entry">
+          <div class="c-label">ARŞİV_B // FOTOĞRAFÇILIK</div>
+          <div class="c-title" data-galeri-ac="fotografcilik">
+  Profesyonel ve Mobil Fotoğrafçılık
+</div>
+          <div class="c-text">
+            <em>Dünya döner dört bir yana, bunlar dönmediği anlar.</em>
+          </div>
+        </div>
+		<div class="c-entry">
+          <div class="c-label">ARŞİV_C // Video Arşivi</div>
+		  <div class="c-title" data-galeri-ac="video">
+  Video Arşivi
+</div>
+          <div class="c-text">
+            <em>Söyleşiler, film ve dizilerden not alınan videolar.</em> 
+          </div>
+        </div>
+        <div class="c-entry">
+          <div class="c-label">ARŞİV_D // DOLMAKALEM</div>
+          <div class="c-title">Platinum #3776 — Uç &amp; Mürekkep Günlüğü</div>
+          <div class="c-text">
+            Platinum Century serisi nib notları, Iroshizuku mürekkep
+            karşılaştırmaları. Arşiv belgeleri için optimal
+            akış-kâğıt uyumu denemeleri.
+          </div>
         </div>
       </div>
     </div>
